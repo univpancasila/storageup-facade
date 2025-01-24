@@ -2,7 +2,7 @@
 
 /**
  * StorageUp Configuration File
- * 
+ *
  * @author @abdansyakuro.id
  */
 
@@ -32,7 +32,7 @@ return [
         'max_size' => env('STORAGE_UP_MAX_SIZE', 10240), // 10MB in kilobytes
         'allowed_mimes' => [
             'jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx',
-            'xls', 'xlsx', 'txt', 'csv', 'zip', 'rar'
+            'xls', 'xlsx', 'txt', 'csv', 'zip', 'rar',
         ],
     ],
 

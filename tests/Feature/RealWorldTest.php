@@ -4,13 +4,13 @@ namespace Univpancasila\StorageUp\Tests\Feature;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Univpancasila\StorageUp\Tests\TestCase;
-use Univpancasila\StorageUp\Tests\Models\User;
 use Univpancasila\StorageUp\Facades\StorageUp;
+use Univpancasila\StorageUp\Tests\Models\User;
+use Univpancasila\StorageUp\Tests\TestCase;
 
 /**
  * Real-world scenario tests for StorageUp package
- * 
+ *
  * @author @abdansyakuro.id
  */
 class RealWorldTest extends TestCase
@@ -18,7 +18,7 @@ class RealWorldTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Create test database table
         $this->artisan('migrate', [
             '--database' => 'testing',
@@ -33,7 +33,7 @@ class RealWorldTest extends TestCase
         Storage::fake('local');
         $user = new User(['name' => 'Test User', 'email' => 'test@example.com']);
         $user->save();
-        
+
         $profilePic = UploadedFile::fake()->image('profile.jpg', 400, 400);
 
         // Act
@@ -56,7 +56,7 @@ class RealWorldTest extends TestCase
         Storage::fake('local');
         $user = new User(['name' => 'Test User', 'email' => 'test@example.com']);
         $user->save();
-        
+
         $doc1 = UploadedFile::fake()->create('document1.pdf', 1024);
         $doc2 = UploadedFile::fake()->create('document2.pdf', 1024);
 
@@ -87,7 +87,7 @@ class RealWorldTest extends TestCase
         Storage::fake('local');
         $user = new User(['name' => 'Test User', 'email' => 'test@example.com']);
         $user->save();
-        
+
         $doc = UploadedFile::fake()->create('document.pdf', 1024);
         $file = StorageUp::apiKey('test_key')
             ->for($user)
@@ -109,7 +109,7 @@ class RealWorldTest extends TestCase
         Storage::fake('local');
         $user = new User(['name' => 'Test User', 'email' => 'test@example.com']);
         $user->save();
-        
+
         // Upload multiple files to different collections
         $profilePic = UploadedFile::fake()->image('profile.jpg');
         $doc1 = UploadedFile::fake()->create('document1.pdf', 1024);
