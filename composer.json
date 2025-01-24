@@ -1,24 +1,25 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "univpancasila/storage-up",
+    "description": "A Laravel package developed by the Internal Organization of the University of Pancasila, designed to simplify file storage management. This package provides an intuitive facade for uploading, retrieving, and managing files across organizational applications through a unified API.",
     "keywords": [
-        ":vendor_name",
+        "univpancasila",
         "laravel",
-        ":package_slug"
+        "storage-up"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/univpancasila/storageup-facade",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Abdan Syakuro",
+            "email": "abdan@univpancasila.ac.id",
             "role": "Developer"
         }
     ],
     "require": {
         "php": "^8.2",
         "spatie/laravel-package-tools": "^1.16",
-        "illuminate/contracts": "^10.0||^11.0"
+        "illuminate/contracts": "^10.0||^11.0",
+        "guzzlehttp/guzzle": "^7.0"
     },
     "require-dev": {
         "laravel/pint": "^1.14",
@@ -35,13 +36,13 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "Univpancasila\\StorageUp\\": "src/",
+            "Univpancasila\\StorageUp\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/",
+            "Univpancasila\\StorageUp\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
@@ -73,10 +74,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Univpancasila\\StorageUp\\StorageUpServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "StorageUp": "Univpancasila\\StorageUp\\Facades\\StorageUp"
             }
         }
     },
