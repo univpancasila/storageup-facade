@@ -4,9 +4,9 @@ namespace Univpancasila\StorageUp\Tests\Feature;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Univpancasila\StorageUp\Tests\TestCase;
-use Univpancasila\StorageUp\Tests\Models\User;
 use Univpancasila\StorageUp\Facades\StorageUp;
+use Univpancasila\StorageUp\Tests\Models\User;
+use Univpancasila\StorageUp\Tests\TestCase;
 
 /**
  * Real-world scenario tests for StorageUp package

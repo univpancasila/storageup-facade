@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void deleteAllFiles($model, ?string $collectionName = null)
  *
  * @see \Univpancasila\StorageUp\StorageUpService
+ *
  * @author @abdansyakuro.id
  */
 class StorageUp extends Facade

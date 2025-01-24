@@ -4,14 +4,12 @@ namespace Univpancasila\StorageUp\Tests\Feature;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Univpancasila\StorageUp\Tests\TestCase;
 
 /**
  * StorageUp Feature Test
  *
  * @author @abdansyakuro.id
  */
-
 test('can upload a file', function () {
     Storage::fake('local');
 

@@ -33,14 +33,14 @@ class StorageFile extends Model
     /**
      * Delete the file from storage service
      *
-     * @param string|null $apiKey Optional API key. If not provided, will use the one from StorageUp facade
-     * @param string|null $apiUrl Optional API URL. If not provided, will use the default one
-     * @return bool|null
+     * @param  string|null  $apiKey  Optional API key. If not provided, will use the one from StorageUp facade
+     * @param  string|null  $apiUrl  Optional API URL. If not provided, will use the default one
+     *
      * @throws \Exception
      */
     public function deleteFile(?string $apiKey = null, ?string $apiUrl = null): ?bool
     {
-        if (!$this->file_id) {
+        if (! $this->file_id) {
             return $this->delete();
         }
 
@@ -48,7 +48,7 @@ class StorageFile extends Model
             $response = Http::withHeaders([
                 'Api-key' => $apiKey ?? app('storage-up')->apiKey,
             ])
-                ->delete(($apiUrl ?? 'https://storage.univpancasila.ac.id') . '/api/v1/storage/' . $this->file_id);
+                ->delete(($apiUrl ?? 'https://storage.univpancasila.ac.id').'/api/v1/storage/'.$this->file_id);
 
             if ($response->failed()) {
                 throw new \Exception('Failed to delete file from storage service.');
@@ -57,17 +57,14 @@ class StorageFile extends Model
             return $this->delete();
         } catch (\Exception $e) {
             report($e);
-            throw new \Exception('Failed to delete file from storage service. ' . $e->getMessage());
+            throw new \Exception('Failed to delete file from storage service. '.$e->getMessage());
         }
     }
 
     /**
      * Delete all files from a specific collection or all collections
      *
-     * @param string $modelType
-     * @param mixed $modelId
-     * @param string|null $collectionName
-     * @return void
+     * @param  mixed  $modelId
      */
     public static function deleteAllFiles(string $modelType, $modelId, ?string $collectionName = null): void
     {

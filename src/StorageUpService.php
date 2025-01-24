@@ -12,73 +12,76 @@ use Univpancasila\StorageUp\Models\StorageFile;
 class StorageUpService
 {
     protected $apiKey = null;
+
     protected $collectionName = null;
+
     protected $model = null;
+
     protected $apiUrl = 'https://storage.univpancasila.ac.id';
 
     /**
      * Set the API key for storage service
      *
-     * @param string $apiKey The API key for the storage service
-     * @return self
+     * @param  string  $apiKey  The API key for the storage service
      */
     public function apiKey(string $apiKey): self
     {
         $this->apiKey = $apiKey;
+
         return $this;
     }
 
     /**
      * Set the API URL for storage service
      *
-     * @param string $url The API URL for the storage service
-     * @return self
+     * @param  string  $url  The API URL for the storage service
      */
     public function apiUrl(string $url): self
     {
         $this->apiUrl = $url;
+
         return $this;
     }
 
     /**
      * Set the collection name for the file
      *
-     * @param string $name Collection name
-     * @return self
+     * @param  string  $name  Collection name
      */
     public function collection(string $name): self
     {
         $this->collectionName = $name;
+
         return $this;
     }
 
     /**
      * Set the model instance
      *
-     * @param mixed $model
-     * @return self
+     * @param  mixed  $model
      */
     public function for($model): self
     {
         $this->model = $model;
+
         return $this;
     }
 
     /**
      * Upload file to storage service
      *
-     * @param UploadedFile $file
-     * @param string|null $type File type/category
+     * @param  string|null  $type  File type/category
      * @return StorageFile
+     *
      * @throws \Exception
      */
     public function upload(UploadedFile $file, ?string $type = null)
     {
-        if (!$this->apiKey) {
+        if (! $this->apiKey) {
             throw new \Exception('API key not set. Use apiKey() method first.');
         }
 
-        if (!$this->model) {
+        if (! $this->model) {
             throw new \Exception('Model not set. Use for() method first.');
         }
 
@@ -88,7 +91,7 @@ class StorageUpService
             ])
                 ->retry(3)
                 ->attach('attachment', $file->get(), $file->getClientOriginalName())
-                ->post($this->apiUrl . '/api/v1/storage/upload');
+                ->post($this->apiUrl.'/api/v1/storage/upload');
 
             if ($response->failed()) {
                 throw new \Exception('Failed to upload file to storage service.');
@@ -120,16 +123,16 @@ class StorageUpService
 
         } catch (\Exception $e) {
             report($e);
-            throw new \Exception('Failed to upload file to storage service. ' . $e->getMessage());
+            throw new \Exception('Failed to upload file to storage service. '.$e->getMessage());
         }
     }
 
     /**
      * Get files from a specific collection for a model
      *
-     * @param mixed $model The model instance
-     * @param string $collectionName The name of the collection to retrieve files from
-     * @param bool $latest Get only the latest file from the collection
+     * @param  mixed  $model  The model instance
+     * @param  string  $collectionName  The name of the collection to retrieve files from
+     * @param  bool  $latest  Get only the latest file from the collection
      * @return \Illuminate\Database\Eloquent\Collection|StorageFile|null
      */
     public function getFile($model, string $collectionName, bool $latest = false)
@@ -149,8 +152,8 @@ class StorageUpService
     /**
      * Delete a specific file from storage
      *
-     * @param StorageFile $file The file to delete
-     * @return bool|null
+     * @param  StorageFile  $file  The file to delete
+     *
      * @throws \Exception
      */
     public function deleteFile(StorageFile $file): ?bool
@@ -161,9 +164,8 @@ class StorageUpService
     /**
      * Delete all files from a specific collection or all collections for a model
      *
-     * @param mixed $model The model instance
-     * @param string|null $collectionName Optional collection name to delete files from
-     * @return void
+     * @param  mixed  $model  The model instance
+     * @param  string|null  $collectionName  Optional collection name to delete files from
      */
     public function deleteAllFiles($model, ?string $collectionName = null): void
     {

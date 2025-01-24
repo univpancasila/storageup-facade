@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Test User Model
- * 
+ *
  * @author @abdansyakuro.id
  */
 class User extends Model
