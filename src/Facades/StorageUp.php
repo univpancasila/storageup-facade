@@ -21,6 +21,6 @@ class StorageUp extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'storage-up';
+        return 'storageup';
     }
 }

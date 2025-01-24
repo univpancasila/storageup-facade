@@ -1,52 +1,31 @@
 <?php
 
 /**
- * StorageUp Configuration File
- * 
  * @author @abdansyakuro.id
  */
-
 return [
     /*
     |--------------------------------------------------------------------------
-    | Default Storage Disk
+    | Storage Service API URL
     |--------------------------------------------------------------------------
     |
-    | This option controls the default storage disk that will be used by the
-    | StorageUp facade. You may change this to any of the disks defined in
-    | your filesystem configuration file.
+    | This is the base URL for the storage service API.
     |
     */
-    'default_disk' => env('STORAGE_UP_DISK', 'local'),
+    'api_url' => env('STORAGE_UP_API_URL', 'https://storage.univpancasila.ac.id'),
 
     /*
     |--------------------------------------------------------------------------
-    | File Validation
+    | API Keys
     |--------------------------------------------------------------------------
     |
-    | Here you may configure the default file validation rules that will be
-    | applied when uploading files through StorageUp.
+    | Here you can configure multiple API keys for different purposes.
+    | The 'default' key will be used when no specific key is specified.
     |
     */
-    'validation' => [
-        'max_size' => env('STORAGE_UP_MAX_SIZE', 10240), // 10MB in kilobytes
-        'allowed_mimes' => [
-            'jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx',
-            'xls', 'xlsx', 'txt', 'csv', 'zip', 'rar'
-        ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Path Generation
-    |--------------------------------------------------------------------------
-    |
-    | Configure how file paths should be generated when storing files.
-    |
-    */
-    'path' => [
-        'prefix' => env('STORAGE_UP_PATH_PREFIX', ''),
-        'use_original_name' => env('STORAGE_UP_USE_ORIGINAL_NAME', false),
-        'hash_length' => env('STORAGE_UP_HASH_LENGTH', 40),
+    'api_keys' => [
+        'default' => env('STORAGE_UP_API_KEY'),
+        // Add more API keys as needed
+        // 'custom' => env('STORAGE_UP_CUSTOM_API_KEY'),
     ],
 ];
