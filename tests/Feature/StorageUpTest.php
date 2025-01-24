@@ -16,8 +16,8 @@ test('can upload a file', function () {
     $file = UploadedFile::fake()->create('document.pdf', 1024);
 
     $result = \Univpancasila\StorageUp\Facades\StorageUp::apiKey(config('storageup.api_keys.default'))
-                            ->collection('documents')
-                            ->upload($file);
+        ->collection('documents')
+        ->upload($file);
 
     expect($result)->toBeString()
         ->and(Storage::disk('local')->exists($result))->toBeTrue();
