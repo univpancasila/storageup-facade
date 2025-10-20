@@ -4,7 +4,6 @@ namespace Univpancasila\StorageUp\Tests\Unit;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
-use Univpancasila\StorageUp\Facades\StorageUp;
 use Univpancasila\StorageUp\Models\StorageFile;
 use Univpancasila\StorageUp\StorageUpService;
 use Univpancasila\StorageUp\Tests\Models\User;
@@ -20,7 +19,7 @@ class StorageUpServiceTest extends TestCase
     /** @test */
     public function it_can_set_api_key()
     {
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $result = $service->apiKey('test-key-123');
 
         $this->assertInstanceOf(StorageUpService::class, $result);
@@ -30,7 +29,7 @@ class StorageUpServiceTest extends TestCase
     /** @test */
     public function it_can_set_api_url()
     {
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $result = $service->apiUrl('https://custom.api.url');
 
         $this->assertInstanceOf(StorageUpService::class, $result);
@@ -40,7 +39,7 @@ class StorageUpServiceTest extends TestCase
     /** @test */
     public function it_can_set_collection_name()
     {
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $result = $service->collection('documents');
 
         $this->assertInstanceOf(StorageUpService::class, $result);
@@ -51,7 +50,7 @@ class StorageUpServiceTest extends TestCase
     public function it_can_set_model_instance()
     {
         $user = User::create(['name' => 'Test User', 'email' => 'test@example.com']);
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $result = $service->for($user);
 
         $this->assertInstanceOf(StorageUpService::class, $result);
@@ -62,7 +61,7 @@ class StorageUpServiceTest extends TestCase
     public function it_supports_fluent_interface()
     {
         $user = User::create(['name' => 'Test User', 'email' => 'test@example.com']);
-        $service = new StorageUpService();
+        $service = new StorageUpService;
 
         $result = $service
             ->apiKey('test-key')
@@ -82,7 +81,7 @@ class StorageUpServiceTest extends TestCase
         $user = User::create(['name' => 'Test User', 'email' => 'test@example.com']);
         $file = UploadedFile::fake()->create('document.pdf', 1024);
 
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $service->for($user)->upload($file);
     }
 
@@ -94,7 +93,7 @@ class StorageUpServiceTest extends TestCase
 
         $file = UploadedFile::fake()->create('document.pdf', 1024);
 
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $service->apiKey('test-key')->upload($file);
     }
 
@@ -116,7 +115,7 @@ class StorageUpServiceTest extends TestCase
         $user = User::create(['name' => 'Test User', 'email' => 'test@example.com']);
         $file = UploadedFile::fake()->create('document.pdf', 1024);
 
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $result = $service
             ->apiKey('test-key')
             ->for($user)
@@ -148,7 +147,7 @@ class StorageUpServiceTest extends TestCase
         $user = User::create(['name' => 'Test User', 'email' => 'test@example.com']);
         $file = UploadedFile::fake()->create('document.pdf', 1024);
 
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $service
             ->apiKey('test-key')
             ->for($user)
@@ -176,7 +175,7 @@ class StorageUpServiceTest extends TestCase
         $user = User::create(['name' => 'Test User', 'email' => 'test@example.com']);
         $file = UploadedFile::fake()->create('document.pdf', 1024);
 
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $service
             ->apiKey('test-key')
             ->for($user)
@@ -199,7 +198,7 @@ class StorageUpServiceTest extends TestCase
         $user = User::create(['name' => 'Test User', 'email' => 'test@example.com']);
         $file = UploadedFile::fake()->create('document.pdf', 1024);
 
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $service
             ->apiKey('test-key')
             ->for($user)
@@ -228,7 +227,7 @@ class StorageUpServiceTest extends TestCase
             'filename' => 'stored-file2.pdf',
         ]);
 
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $files = $service->getFile($user, 'documents');
 
         $this->assertCount(2, $files);
@@ -259,7 +258,7 @@ class StorageUpServiceTest extends TestCase
             'filename' => 'stored-file2.pdf',
         ]);
 
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $file = $service->getFile($user, 'documents', true);
 
         $this->assertInstanceOf(StorageFile::class, $file);
@@ -271,7 +270,7 @@ class StorageUpServiceTest extends TestCase
     {
         $user = User::create(['name' => 'Test User', 'email' => 'test@example.com']);
 
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $file = $service->getFile($user, 'documents', true);
 
         $this->assertNull($file);
@@ -295,7 +294,7 @@ class StorageUpServiceTest extends TestCase
             'file_id' => 'remote-file-123',
         ]);
 
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $result = $service->deleteFile($file);
 
         $this->assertTrue($result);
@@ -339,7 +338,7 @@ class StorageUpServiceTest extends TestCase
             'file_id' => 'remote-file-3',
         ]);
 
-        $service = new StorageUpService();
+        $service = new StorageUpService;
         $service->deleteAllFiles($user, 'documents');
 
         $this->assertDatabaseMissing('storage_files', [

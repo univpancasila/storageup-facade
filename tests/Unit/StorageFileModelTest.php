@@ -101,6 +101,7 @@ class StorageFileModelTest extends TestCase
 
         Http::assertSent(function ($request) {
             $body = $request->data();
+
             return $request->hasHeader('Api-key', 'test-api-key') &&
                    $request->url() === 'https://storage.univpancasila.ac.id/api/v1/storage/delete' &&
                    $body['fileId'] === 'file-123' &&

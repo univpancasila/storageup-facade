@@ -58,8 +58,6 @@ class StorageUpService implements StorageUp
 
     /**
      * Set the model instance
-     *
-     * @param  Model  $model
      */
     public function for(Model $model): self
     {
@@ -130,7 +128,7 @@ class StorageUpService implements StorageUp
             return $storageFile;
         } catch (\Exception $e) {
             report($e);
-            throw new \Exception('Failed to upload file to storage service. ' . $e->getMessage());
+            throw new \Exception('Failed to upload file to storage service. '.$e->getMessage());
         }
     }
 

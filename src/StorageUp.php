@@ -4,7 +4,6 @@ namespace Univpancasila\StorageUp;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Http;
 use Univpancasila\StorageUp\Models\StorageFile;
 
 /**
@@ -18,6 +17,7 @@ interface StorageUp
      * @param  string  $apiKey  The API key for the storage service
      */
     public function apiKey(string $apiKey): self;
+
     /**
      * Set the API URL for storage service
      *
@@ -34,8 +34,6 @@ interface StorageUp
 
     /**
      * Set the model instance
-     *
-     * @param  Model  $model
      */
     public function for(Model $model): self;
 
