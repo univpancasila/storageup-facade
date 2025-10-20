@@ -8,14 +8,14 @@ A Laravel package developed by the Internal Organization of the University of Pa
 
 ## Features
 
-✨ **Simple & Intuitive** - Clean facade interface for file operations  
-🔗 **Polymorphic Relations** - Attach files to any Eloquent model  
-📁 **Collection Management** - Organize files into named collections  
-🔄 **Automatic Retry** - Built-in HTTP retry mechanism (3-10 attempts, configurable)  
-🗄️ **Database Tracking** - Track all file metadata in your database  
-⚡ **Optimized Queries** - Composite indexes for fast lookups  
-🧪 **Fully Tested** - 54 tests with comprehensive coverage  
-🎯 **Type Safe** - Full type hints and PHPStan compliance  
+✨ **Simple & Intuitive** - Clean facade interface for file operations
+🔗 **Polymorphic Relations** - Attach files to any Eloquent model
+📁 **Collection Management** - Organize files into named collections
+🔄 **Automatic Retry** - Built-in HTTP retry mechanism (3-10 attempts, configurable)
+🗄️ **Database Tracking** - Track all file metadata in your database
+⚡ **Optimized Queries** - Composite indexes for fast lookups
+🧪 **Fully Tested** - 54 tests with comprehensive coverage
+🎯 **Type Safe** - Full type hints and PHPStan compliance
 ⚙️ **Configurable** - Endpoints and retry counts customizable via config
 
 ## Requirements
@@ -29,7 +29,7 @@ A Laravel package developed by the Internal Organization of the University of Pa
 ### 1. Install via Composer
 
 ```bash
-composer require univpancasila/storage-up
+composer require univpancasila/storageup-facade
 ```
 
 ### 2. Publish Configuration
@@ -43,21 +43,21 @@ This creates `config/storageup.php`:
 ```php
 return [
     'api_url' => env('STORAGE_UP_API_URL', 'https://storage.univpancasila.ac.id'),
-    
+
     'api_keys' => [
         'default' => env('STORAGE_UP_API_KEY'),
     ],
-    
+
     'endpoints' => [
         'upload' => env('STORAGE_UP_UPLOAD_ENDPOINT', '/api/v1/storage/upload'),
         'delete' => env('STORAGE_UP_DELETE_ENDPOINT', '/api/v1/storage/delete'),
     ],
-    
+
     'retry' => [
         'upload' => env('STORAGE_UP_UPLOAD_RETRY', 3),
         'delete' => env('STORAGE_UP_DELETE_RETRY', 10),
     ],
-    
+
     'validation' => [
         'max_size' => env('STORAGE_UP_MAX_SIZE', 10240), // 10MB
         'allowed_mimes' => [
@@ -242,7 +242,7 @@ class User extends Model
     {
         return $this->morphMany(StorageFile::class, 'model');
     }
-    
+
     /**
      * Get files from specific collection
      */
@@ -252,7 +252,7 @@ class User extends Model
             ->where('collection_name', $collection)
             ->get();
     }
-    
+
     /**
      * Get latest file from collection
      */
@@ -313,7 +313,7 @@ class FileController extends Controller
 
         try {
             $user = auth()->user();
-            
+
             $file = StorageUp::apiKey(config('storageup.api_keys.default'))
                 ->for($user)
                 ->collection($request->collection)
@@ -346,7 +346,7 @@ class FileController extends Controller
         $user = auth()->user();
         $collection = $request->get('collection');
 
-        $files = $collection 
+        $files = $collection
             ? StorageUp::getFile($user, $collection)
             : $user->storageFiles;
 
@@ -363,7 +363,7 @@ class FileController extends Controller
     {
         try {
             $file = StorageFile::findOrFail($id);
-            
+
             // Optional: Check ownership
             if ($file->model_id !== auth()->id()) {
                 return response()->json([
@@ -527,27 +527,27 @@ StorageFile::deleteAllFiles(
 ```blade
 <form action="{{ route('files.upload') }}" method="POST" enctype="multipart/form-data">
     @csrf
-    
+
     <div class="mb-4">
         <label for="file" class="block text-sm font-medium text-gray-700">
             Upload File
         </label>
-        <input type="file" 
-               name="file" 
-               id="file" 
+        <input type="file"
+               name="file"
+               id="file"
                required
                class="mt-1 block w-full">
         @error('file')
             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
         @enderror
     </div>
-    
+
     <div class="mb-4">
         <label for="collection" class="block text-sm font-medium text-gray-700">
             Collection
         </label>
-        <select name="collection" 
-                id="collection" 
+        <select name="collection"
+                id="collection"
                 required
                 class="mt-1 block w-full">
             <option value="documents">Documents</option>
@@ -555,8 +555,8 @@ StorageFile::deleteAllFiles(
             <option value="videos">Videos</option>
         </select>
     </div>
-    
-    <button type="submit" 
+
+    <button type="submit"
             class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
         Upload File
     </button>
@@ -571,11 +571,11 @@ StorageFile::deleteAllFiles(
         <div class="flex items-center justify-between p-4 border rounded">
             <div class="flex items-center space-x-4">
                 @if($file->url_thumbnail)
-                    <img src="{{ $file->url_thumbnail }}" 
+                    <img src="{{ $file->url_thumbnail }}"
                          alt="{{ $file->original_name }}"
                          class="w-16 h-16 object-cover rounded">
                 @endif
-                
+
                 <div>
                     <h4 class="font-medium">{{ $file->original_name }}</h4>
                     <p class="text-sm text-gray-600">
@@ -586,20 +586,20 @@ StorageFile::deleteAllFiles(
                     </p>
                 </div>
             </div>
-            
+
             <div class="flex space-x-2">
-                <a href="{{ $file->url }}" 
+                <a href="{{ $file->url }}"
                    target="_blank"
                    class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">
                     View
                 </a>
-                
-                <form action="{{ route('files.destroy', $file->id) }}" 
-                      method="POST" 
+
+                <form action="{{ route('files.destroy', $file->id) }}"
+                      method="POST"
                       onsubmit="return confirm('Are you sure?')">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" 
+                    <button type="submit"
                             class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
                         Delete
                     </button>
@@ -622,7 +622,7 @@ try {
         ->for($user)
         ->collection('documents')
         ->upload($request->file('document'));
-        
+
 } catch (\Exception $e) {
     // Handle errors
     if (str_contains($e->getMessage(), 'API key not set')) {
@@ -634,12 +634,12 @@ try {
     } else {
         // Other errors
     }
-    
+
     Log::error('File upload failed', [
         'error' => $e->getMessage(),
         'user_id' => $user->id ?? null,
     ]);
-    
+
     throw $e;
 }
 ```
@@ -696,7 +696,7 @@ test('user can upload document', function () {
         ]);
 
     $response->assertOk();
-    
+
     $this->assertDatabaseHas('storage_files', [
         'model_type' => User::class,
         'model_id' => $user->id,
