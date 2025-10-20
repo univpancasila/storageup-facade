@@ -21,7 +21,11 @@ class StorageUpServiceProvider extends PackageServiceProvider
     public function packageRegistered()
     {
         $this->app->singleton('storageup', function ($app) {
-            return new StorageUpService;
+            return new StorageUpService();
+        });
+
+        $this->app->singleton(StorageUp::class, function ($app) {
+            return $app->make('storageup');
         });
     }
 }

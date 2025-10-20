@@ -33,6 +33,33 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | API Endpoints
+    |--------------------------------------------------------------------------
+    |
+    | Configure the API endpoints for different operations.
+    | These paths will be appended to the api_url.
+    |
+    */
+    'endpoints' => [
+        'upload' => env('STORAGE_UP_UPLOAD_ENDPOINT', '/api/v1/storage/upload'),
+        'delete' => env('STORAGE_UP_DELETE_ENDPOINT', '/api/v1/storage/delete'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | HTTP Retry Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configure the number of retry attempts for API requests.
+    |
+    */
+    'retry' => [
+        'upload' => env('STORAGE_UP_UPLOAD_RETRY', 3),
+        'delete' => env('STORAGE_UP_DELETE_RETRY', 10),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Validation
     |--------------------------------------------------------------------------
     |

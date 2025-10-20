@@ -2,6 +2,7 @@
 
 namespace Univpancasila\StorageUp;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Univpancasila\StorageUp\Models\StorageFile;
@@ -9,7 +10,7 @@ use Univpancasila\StorageUp\Models\StorageFile;
 /**
  * @author @abdansyakuro.id
  */
-class StorageUpService
+class StorageUpService implements StorageUp
 {
     protected $apiKey = null;
 
@@ -58,9 +59,9 @@ class StorageUpService
     /**
      * Set the model instance
      *
-     * @param  mixed  $model
+     * @param  Model  $model
      */
-    public function for($model): self
+    public function for(Model $model): self
     {
         $this->model = $model;
 
@@ -85,13 +86,20 @@ class StorageUpService
             throw new \Exception('Model not set. Use for() method first.');
         }
 
+        $uploadEndpoint = config('storageup.endpoints.upload', '/api/v1/storage/upload');
+        $retryCount = config('storageup.retry.upload', 3);
+
         try {
             $response = Http::withHeaders([
                 'Api-key' => $this->apiKey,
             ])
-                ->retry(3)
-                ->attach('attachment', $file->get(), $file->getClientOriginalName())
-                ->post($this->apiUrl.'/api/v1/storage/upload');
+                ->retry($retryCount)
+                ->attach(
+                    'attachment',
+                    fopen($file->getRealPath(), 'r'),
+                    $file->getClientOriginalName()
+                )
+                ->post($this->apiUrl.$uploadEndpoint);
 
             if ($response->failed()) {
                 throw new \Exception('Failed to upload file to storage service.');
@@ -120,22 +128,21 @@ class StorageUpService
             $this->model = null;
 
             return $storageFile;
-
         } catch (\Exception $e) {
             report($e);
-            throw new \Exception('Failed to upload file to storage service. '.$e->getMessage());
+            throw new \Exception('Failed to upload file to storage service. ' . $e->getMessage());
         }
     }
 
     /**
      * Get files from a specific collection for a model
      *
-     * @param  mixed  $model  The model instance
+     * @param  Model  $model  The model instance
      * @param  string  $collectionName  The name of the collection to retrieve files from
      * @param  bool  $latest  Get only the latest file from the collection
      * @return \Illuminate\Database\Eloquent\Collection|StorageFile|null
      */
-    public function getFile($model, string $collectionName, bool $latest = false)
+    public function getFile(Model $model, string $collectionName, bool $latest = false)
     {
         $query = StorageFile::query()
             ->where('model_type', get_class($model))
@@ -164,10 +171,10 @@ class StorageUpService
     /**
      * Delete all files from a specific collection or all collections for a model
      *
-     * @param  mixed  $model  The model instance
+     * @param  Model  $model  The model instance
      * @param  string|null  $collectionName  Optional collection name to delete files from
      */
-    public function deleteAllFiles($model, ?string $collectionName = null): void
+    public function deleteAllFiles(Model $model, ?string $collectionName = null): void
     {
         StorageFile::deleteAllFiles(
             modelType: get_class($model),

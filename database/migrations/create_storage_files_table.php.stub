@@ -17,10 +17,13 @@ return new class extends Migration
             $table->string('collection_name')->nullable();
             $table->string('original_name');
             $table->string('filename');
-            $table->string('file_id')->nullable();
-            $table->string('url')->nullable();
-            $table->string('url_thumbnail')->nullable();
+            $table->string('file_id')->nullable()->index();
+            $table->text('url')->nullable();
+            $table->text('url_thumbnail')->nullable();
             $table->timestamps();
+
+            // Composite index for frequent queries
+            $table->index(['model_type', 'model_id', 'collection_name'], 'storage_files_model_collection_index');
         });
     }
 

@@ -38,17 +38,39 @@ class StorageFile extends Model
      *
      * @throws \Exception
      */
-    public function deleteFile(?string $apiKey = null, ?string $apiUrl = null): ?bool
+    public function deleteFile(?string $apiKey = null, ?string $apiUrl = null): bool
     {
         if (! $this->file_id) {
             return $this->delete();
         }
 
+        if (! $apiKey) {
+            $apiKey = config('storageup.api_keys.default');
+        }
+
+        if (! $apiUrl) {
+            $apiUrl = config('storageup.api_url', 'https://storage.univpancasila.ac.id');
+        }
+
+        $deleteEndpoint = config('storageup.endpoints.delete', '/api/v1/storage/delete');
+        $retryCount = config('storageup.retry.delete', 10);
+
         try {
             $response = Http::withHeaders([
-                'Api-key' => $apiKey ?? app('storage-up')->apiKey,
+                'Api-key' => $apiKey,
             ])
-                ->delete(($apiUrl ?? 'https://storage.univpancasila.ac.id').'/api/v1/storage/'.$this->file_id);
+                ->retry($retryCount)
+                ->post($apiUrl.$deleteEndpoint, [
+                    'fileId' => $this->file_id,
+                    'fileName' => $this->filename,
+                    'safeDelete' => 0,
+                ]);
+
+            $result = $response->json();
+
+            if (isset($result['status']) && $result['status'] === 'failed') {
+                throw new \Exception($result['messages'] ?? 'Failed to delete file from storage service.');
+            }
 
             if ($response->failed()) {
                 throw new \Exception('Failed to delete file from storage service.');

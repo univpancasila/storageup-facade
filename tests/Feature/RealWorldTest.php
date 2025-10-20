@@ -3,7 +3,7 @@
 namespace Univpancasila\StorageUp\Tests\Feature;
 
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 use Univpancasila\StorageUp\Facades\StorageUp;
 use Univpancasila\StorageUp\Tests\Models\User;
 use Univpancasila\StorageUp\Tests\TestCase;
@@ -15,29 +15,29 @@ use Univpancasila\StorageUp\Tests\TestCase;
  */
 class RealWorldTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        // Create test database table
-        $this->artisan('migrate', [
-            '--database' => 'testing',
-            '--path' => __DIR__.'/../../database/migrations',
-        ]);
-    }
-
     /** @test */
     public function it_can_handle_user_profile_picture_upload()
     {
         // Arrange
-        Storage::fake('local');
+        Http::fake([
+            '*/api/v1/storage/upload' => Http::response([
+                'status' => 'success',
+                'data' => [
+                    'fileName' => 'profile-123.jpg',
+                    'fileId' => 'profile-file-123',
+                    'link' => 'https://storage.example.com/profile-123.jpg',
+                    'thumbnail' => 'https://storage.example.com/thumb-profile-123.jpg',
+                ],
+            ], 200),
+        ]);
+
         $user = new User(['name' => 'Test User', 'email' => 'test@example.com']);
         $user->save();
 
         $profilePic = UploadedFile::fake()->image('profile.jpg', 400, 400);
 
         // Act
-        $file = StorageUp::apiKey(env('STORAGE_UP_API_KEY'))
+        $file = StorageUp::apiKey('test-api-key')
             ->for($user)
             ->collection('profile_pictures')
             ->upload($profilePic);
@@ -53,7 +53,26 @@ class RealWorldTest extends TestCase
     public function it_can_handle_multiple_document_uploads()
     {
         // Arrange
-        Storage::fake('local');
+        Http::fake([
+            '*/api/v1/storage/upload' => Http::sequence()
+                ->push([
+                    'status' => 'success',
+                    'data' => [
+                        'fileName' => 'document1-stored.pdf',
+                        'fileId' => 'doc-1',
+                        'link' => 'https://storage.example.com/document1.pdf',
+                    ],
+                ], 200)
+                ->push([
+                    'status' => 'success',
+                    'data' => [
+                        'fileName' => 'document2-stored.pdf',
+                        'fileId' => 'doc-2',
+                        'link' => 'https://storage.example.com/document2.pdf',
+                    ],
+                ], 200),
+        ]);
+
         $user = new User(['name' => 'Test User', 'email' => 'test@example.com']);
         $user->save();
 
@@ -84,7 +103,18 @@ class RealWorldTest extends TestCase
     public function it_can_handle_file_deletion()
     {
         // Arrange
-        Storage::fake('local');
+        Http::fake([
+            '*/api/v1/storage/upload' => Http::response([
+                'status' => 'success',
+                'data' => [
+                    'fileName' => 'document-stored.pdf',
+                    'fileId' => 'doc-123',
+                    'link' => 'https://storage.example.com/document.pdf',
+                ],
+            ], 200),
+            '*/api/v1/storage/delete' => Http::response(['status' => 'success'], 200),
+        ]);
+
         $user = new User(['name' => 'Test User', 'email' => 'test@example.com']);
         $user->save();
 
@@ -106,7 +136,35 @@ class RealWorldTest extends TestCase
     public function it_can_handle_bulk_file_operations()
     {
         // Arrange
-        Storage::fake('local');
+        Http::fake([
+            '*/api/v1/storage/upload' => Http::sequence()
+                ->push([
+                    'status' => 'success',
+                    'data' => [
+                        'fileName' => 'profile-stored.jpg',
+                        'fileId' => 'profile-1',
+                        'link' => 'https://storage.example.com/profile.jpg',
+                    ],
+                ], 200)
+                ->push([
+                    'status' => 'success',
+                    'data' => [
+                        'fileName' => 'doc1-stored.pdf',
+                        'fileId' => 'doc-1',
+                        'link' => 'https://storage.example.com/doc1.pdf',
+                    ],
+                ], 200)
+                ->push([
+                    'status' => 'success',
+                    'data' => [
+                        'fileName' => 'doc2-stored.pdf',
+                        'fileId' => 'doc-2',
+                        'link' => 'https://storage.example.com/doc2.pdf',
+                    ],
+                ], 200),
+            '*/api/v1/storage/*' => Http::response(['status' => 'success'], 200),
+        ]);
+
         $user = new User(['name' => 'Test User', 'email' => 'test@example.com']);
         $user->save();
 

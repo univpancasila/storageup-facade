@@ -27,10 +27,26 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
+        config()->set('database.connections.testing', [
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+        ]);
 
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_skeleton_table.php.stub';
+        // Set default config values for testing
+        config()->set('storageup.api_url', 'https://storage.univpancasila.ac.id');
+        config()->set('storageup.api_keys.default', 'test-api-key');
+
+        // Run migrations
+        $migration = include __DIR__.'/../database/migrations/create_storage_files_table.php.stub';
         $migration->up();
-        */
+
+        // Create users table for testing
+        $app['db']->connection()->getSchemaBuilder()->create('users', function ($table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email');
+            $table->timestamps();
+        });
     }
 }
