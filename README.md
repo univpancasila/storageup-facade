@@ -29,7 +29,7 @@ A Laravel package developed by the Internal Organization of the University of Pa
 ### 1. Install via Composer
 
 ```bash
-composer require univpancasila/storageup-facade
+composer require univpancasila/storage-up
 ```
 
 ### 2. Publish Configuration
