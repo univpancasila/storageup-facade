@@ -18,7 +18,7 @@ class StorageUpServiceProvider extends PackageServiceProvider
             ->hasMigration('create_storage_files_table');
     }
 
-    public function packageRegistered()
+    public function packageRegistered(): void
     {
         $this->app->singleton('storageup', function ($app) {
             return new StorageUpService;
