@@ -2,6 +2,7 @@
 
 namespace Univpancasila\StorageUp;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
@@ -138,7 +139,7 @@ class StorageUpService implements StorageUp
      * @param  Model  $model  The model instance
      * @param  string  $collectionName  The name of the collection to retrieve files from
      * @param  bool  $latest  Get only the latest file from the collection
-     * @return \Illuminate\Database\Eloquent\Collection|StorageFile|null
+     * @return Collection|StorageFile|null
      */
     public function getFile(Model $model, string $collectionName, bool $latest = false)
     {

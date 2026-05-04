@@ -3,6 +3,7 @@
 namespace Univpancasila\StorageUp\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Univpancasila\StorageUp\StorageUpService;
 
 /**
  * @method static \Univpancasila\StorageUp\StorageUpService apiKey(string $apiKey)
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static bool|null deleteFile(\Univpancasila\StorageUp\Models\StorageFile $file)
  * @method static void deleteAllFiles($model, ?string $collectionName = null)
  *
- * @see \Univpancasila\StorageUp\StorageUpService
+ * @see StorageUpService
  *
  * @author @abdansyakuro.id
  */
