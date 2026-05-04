@@ -951,7 +951,7 @@ If you discover any security-related issues, please email abdan@univpancasila.ac
 
 ## Credits
 
-- [Abdan Syakuro](https://github.com/abdansyakuro) - Developer
+- [Abdan Syakuro](https://github.com/developerabdan) - Developer
 - [University of Pancasila](https://univpancasila.ac.id) - Organization
 - [All Contributors](../../contributors)
 
